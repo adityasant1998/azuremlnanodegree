@@ -88,20 +88,3 @@ AutoML's experiment timeout (set as 30 mintues) is more so, it uses lots of mode
 2. Increasing the estimate timeout for autoML to find best model.Thus a longer timeout will have greater number of models to run and thus higher the performance rate too.
 3. The dataset has Class Imbalance,which can reflect in model’s accuracy,which can be treated with SMOTE,ADASYN sampling methods and also we can modify the experiments with other hyperparameters and increase the cross validation to enhance models performance, generalization and accuracy rate.
 4. By validating more metrics, we could get better model with best accuracy rate.AUC_weighted which is used to get the arithmetic mean of the score for each class can be weighted and analysed for futher improvements and model training.
-
-## Proof of cluster clean up
-The cluster is selected and then deleted with the help of option avaliable in Compute tab.
-![Cluster Delete](https://github.com/Harini-Pavithra/Machine-Learning-Engineer-with-Microsoft-Azure-Nanodegree/blob/main/Optimizing%20an%20ML%20Pipeline%20in%20Azure/Compute/Compute%20Delete.JPG)
-
-# Review from Udacity Mentor
-
-![Optimizing_An_ML_Pipeline](https://github.com/Harini-Pavithra/Machine-Learning-Engineer-with-Microsoft-Azure-Nanodegree/blob/main/Optimizing%20an%20ML%20Pipeline%20in%20Azure/Review/Optimizing_An_ML_Pipeline.JPG)
-
-## Note
-1. The Architecture diagram, flow diagram and screenshots of ouputs, log file are available in HyperDrive folder.
-2. The Architecture diagram, flow diagram and screenshots of ouputs are available in AutoML folder.
-3. The compute instance screenshot is available in Compute folder.
-4. The dataset screenshot and bankmarkerting_train.csv are available in Dataset folder.
-5. The Experiments screenshot is available in Experiment folder.
-6. The best retrieved models,output screenshot,script file output are available in Outputs folder.
-7. Proof of Cluster deletion is available in Compute folder.
