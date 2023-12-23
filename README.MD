@@ -1,4 +1,3 @@
-
 # Optimizing an ML Pipeline in Azure
 
 ## Problem Statement:
@@ -67,8 +66,6 @@ Search Space Definition: Values for --C set to (0.1, 1) and --max_iter to (50, 1
 Efficient Exploration: Random sampling enables efficient navigation of this hyperparameter space while supporting early termination of underperforming runs.
 
 ## Benefits Of The Early Stopping Policy:
-
-Strategic Resource Allocation via Early Stopping:
 
 Optimizing Efficiency with Early Termination:
 
@@ -144,7 +141,7 @@ Recommendations: Consider prioritizing AutoML for initial model exploration and 
 
 ---
 
-## Key Areas for Future Research and Optimization:
+# Key Areas for Future Research and Optimization:
 
 Algorithmic Exploration and Hyperparameter Tuning:
 
