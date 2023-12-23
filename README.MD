@@ -159,3 +159,7 @@ Hyperparameter and Cross-Validation Tuning: Experiment with alternative hyperpar
 Evaluation Metric Expansion:
 
 AUC-Weighted Consideration: Incorporate AUC-weighted metric to complement accuracy, providing a more comprehensive assessment of model performance across classes, particularly in imbalanced scenarios.
+
+---
+
+Note : Added important screenshots and filder in present folder
