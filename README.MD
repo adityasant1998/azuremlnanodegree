@@ -32,6 +32,8 @@ Ensemble Learning: Combines multiple models for enhanced performance.
 XGBoost: Powerful gradient boosting algorithm known for accuracy and efficiency.
 Standard Scaler: Normalizes features by centering and scaling to a standard deviation of 1, often beneficial for gradient-based algorithms.
 
+# Hyperdrive
+
 ## Data Acquisition and Preprocessing:
 
 Dataset Retrieval: Leveraged Azure Machine Learning's TabularDatasetFactory class to fetch the Bank Marketing dataset (bankmarketing_train.csv) from the specified URL.
@@ -39,7 +41,7 @@ Data Cleaning and Preprocessing: Employed the clean_data() function to perform e
 One-Hot Encoding: Transformed categorical features into numerical representations for compatibility with machine learning algorithms.
 Train-Test Split: Partitioned the preprocessed dataset into training (70%) and testing (30%) sets for model development and evaluation, respectively.
 
-# Model Selection and Training for Hyperdrive:
+# Model Selection and Training:
 
 Algorithm: Logistic Regression, a widely used statistical classification method for predicting probabilities of binary outcomes.
 Training Script: train.py, containing model training logic and hyperparameter tuning setup.
