@@ -1,90 +1,162 @@
 
 # Optimizing an ML Pipeline in Azure
 
-# Overview
-
-This project is part of the Udacity Azure ML Nanodegree.In this project, we build and optimize an Azure ML pipeline using the Python SDK and a provided Scikit-learn model.This model is then compared to an Azure AutoML run.
-
-# Summary
-
 ## Problem Statement:
 
-The dataset (bankmarketing_train.csv) is a UCI Dataset, which contains data about direct marketing campaigns (phone calls) of a Portuguese banking institution. The marketing campaigns were based on phone calls. Often, more than one contact to the same client was required, in order to access if the product (bank term deposit) would be ('yes') or not ('no') subscribed.we seek to predict if the client will subscribe a term deposit (variable y) or not. There are 21 features, 32.950 rows and target variable in total.Two Machine Learning models were built using this dataset.
+Binary Classification Task:
 
-The first model we built is trained with Logistic regression and HyperDrive parameters which are tuned with the help of Azure ML python SDK and HyperDrive tools(Azure HyperDrive functionalities).The best accuracy obtained from this model is 91.10%
+Dataset: UCI Bank Marketing dataset (bankmarketing_train.csv)
+Features: 21 numerical and categorical features
+Target Variable: 'y' (binary, indicating term deposit subscription)
+Objective: Develop a model to accurately predict term deposit subscription outcomes.
+Modeling Approach:
 
-The Second model we built is with the help of Azure AutoML for training many types of models such as LightGBM, XGBoostClassifier, RandomForest, VotingEnsemble, StackEnsemble etc.The best accuracy obtained from this model is 91.74%
+Model 1: Logistic Regression with Hyperparameter Tuning
+
+Leveraged Azure ML Python SDK and HyperDrive for hyperparameter optimization.
+Achieved best accuracy of 91.10%.
+Model 2: Azure AutoML with Automated Model Selection and Training
+
+Explored diverse model architectures (LightGBM, XGBoostClassifier, RandomForest, VotingEnsemble, StackEnsemble).
+Yielded best accuracy of 91.74%.
 
 ## Best Model:
 
-Therefore, the best performing model is Voting Ensemble of Xgboost classifier using standard scaler wrapper with accuracy 91.74%
+Model Performance:
 
-# Scikit-learn Pipeline
+Top-Performing Model: Voting Ensemble incorporating XGBoost classifiers.
+Feature Scaling: Standard Scaler applied for normalization.
+Accuracy: 91.74%.
+Key Technical Details:
 
-## Pipeline Architecture:
+Ensemble Learning: Combines multiple models for enhanced performance.
+XGBoost: Powerful gradient boosting algorithm known for accuracy and efficiency.
+Standard Scaler: Normalizes features by centering and scaling to a standard deviation of 1, often beneficial for gradient-based algorithms.
 
-Initially in the training script (train.py),the dataset (bankmarkerting_train.csv) is retrieved from the URL (https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv) provided using TabularDatasetFactory Class (Contains methods to create a tabular dataset for Azure Machine Learning). The data is then pre-processed and cleaned with the help of clean_data() function by converting the categorical data to one hot encoding(One hot encoding is a process by which categorical variables are converted into a form that could be provided to ML algorithms to do a better job in prediction).Then the data is being split as train and test with the ratio of 70:30.
+## Data Acquisition and Preprocessing:
 
-## Classification Algorithm:
+Dataset Retrieval: Leveraged Azure Machine Learning's TabularDatasetFactory class to fetch the Bank Marketing dataset (bankmarketing_train.csv) from the specified URL.
+Data Cleaning and Preprocessing: Employed the clean_data() function to perform essential preprocessing steps, including:
+One-Hot Encoding: Transformed categorical features into numerical representations for compatibility with machine learning algorithms.
+Train-Test Split: Partitioned the preprocessed dataset into training (70%) and testing (30%) sets for model development and evaluation, respectively.
 
-The classification algorithm used here is Logistic Regression (Logistic regression is a well-known method in statistics that is used to predict the probability of an outcome, and is especially popular for classification tasks. The algorithm predicts the probability of occurrence of an event by fitting data to a logistic function). Then the training(train.py) script is passed to estimator and HyperDrive configurations to predict the best model and accuracy.
+## Model Selection and Training:
 
-The HyperDrive run is executed successfully with the help of parameter sampler, policy, estimator and HyperDrive Config, before that Azure workspace and experiment is created successfully. Then Compute cluster is created with "Standard_DV_V2" as virtual machine size and 4 as the maximum number of nodes as per the instructions. 
+Algorithm: Logistic Regression, a widely used statistical classification method for predicting probabilities of binary outcomes.
+Training Script: train.py, containing model training logic and hyperparameter tuning setup.
+HyperDrive Integration:
+Estimator: Configured for Logistic Regression training.
+HyperDrive Configuration: Defines parameter sampling, early stopping policy, and run settings.
+Azure ML Environment:
+Workspace and Experiment: Established for model development and tracking.
+Compute Cluster: "Standard_DV_V2" VMs (4 nodes) provisioned for computational resources.
 
-## HyperParameter Tuning:
+## Hyperparameter Tuning Process:
 
-The Hyperparameters are then tuned (Hyperparameters are adjustable parameters that let you control the model training process and Hyperparameter tuning is the process of finding the configuration of hyperparameters that results in the best performance) with the help of parameter sampler.Parameter sampling method is to use over the hyperparameter space(hyperparameter space is tuning hyperparameters by exploring the range of values defined for each hyperparameter).
+Parameter Space Exploration:
+Leveraged Random Sampling for efficient hyperparameter search, striking a balance between exploration and computational cost.
+Early Termination of Underperforming Runs:
+Implemented Bandit policy to adaptively allocate resources to promising configurations, maximizing overall efficiency.
+HyperDrive Experimentation:
+Launched HyperDrive runs with specified configurations to systematically explore the hyperparameter space and identify optimal values.
 
 ## Benefits Of The Parameter Sampler:
 
-Random Sampling is used here. In random sampling, hyperparameter values are randomly selected from the defined search space. It supports discrete and continuous hyperparameters.  It also supports early termination of low-performance runs. Random Sampling is used on ‘--C’
-( Inverse of regularization parameter ) which is a control variable that retains strength modification of Regularization by being inversely positioned to the Lambda regulator and ‘--max_iter’  (Maximum number of iterations to converge) which defines the number of times we want the learning to happen and this helps in solving high complex problems with large training hours as per the instructions. 
-
-For ‘--C’, the parameter is set as (0.1,1) and for ‘—max_iter’ the parameter is set as (50,100,150,200) which returns a value uniformly distributed between low and high.
-
+Hyperparameter Tuning: Applied to optimize the inverse regularization parameter (--C) and maximum iterations (--max_iter), both crucial for model performance and convergence.
+Search Space Definition: Values for --C set to (0.1, 1) and --max_iter to (50, 100, 150, 200) to encompass a range of potential configurations.
+Efficient Exploration: Random sampling enables efficient navigation of this hyperparameter space while supporting early termination of underperforming runs.
 
 ## Benefits Of The Early Stopping Policy:
 
-Then the policy is defined, early stopping policy is defined to automatically terminate poorly performing runs with an early termination policy.It also improves computational efficiency. Bandit policy is used here with slack_factor=0.1,evaluation_internal=1, delay_evaluation=5.Bandit terminates runs where the primary metric is not within the specified slack factor/slack amount compared to the best performing run.
+Strategic Resource Allocation via Early Stopping:
 
-The SKLearn estimator is created with the training script(train.py), directory path and cluster name, then the configurations for runs is created using HyperDriveConfig with estimator(created using SKLearn),hyperparameter sampling(Random Sampling), policy(Bandit policy) and also included primary metric(Accuracy),it’s goal (Maximize) , maximum total runs(10) and maximum concurrent runs(4).
+Optimizing Efficiency with Early Termination:
 
-Finally the experiment is being submitted and using the Notebook widget(RunDetails(hyperdrive_run).show()), it is visualized. Once the run is successfully completed or executed, the best model is retrieved and  saved in outputs folder in source directory.
+Bandit Policy Implementation: Employed for adaptive resource allocation through the termination of underperforming runs, enhancing computational efficiency and model exploration.
+Hyperparameter Tuning: slack_factor=0.1, evaluation_interval=1, and delay_evaluation=5 set to guide strategic termination decisions.
+HyperDrive Experiment Setup:
 
-Screenshots of outputs are available in HyperDrive folder.
+SKLearn Estimator Configuration: Configured with train.py training script, directory path, and cluster name for model training.
+HyperDriveConfig Establishment: Defined with key parameters:
+Estimator: SKLearn-based
+Parameter Sampling: Random Sampling for efficient hyperparameter exploration
+Policy: Bandit for early stopping
+Primary Metric: Accuracy (objective: maximization)
+Maximum Runs: 10
+Maximum Concurrent Runs: 4
+Experiment Execution and Monitoring:
+
+Experiment Submission: HyperDrive experiment initiated for systematic model training and evaluation.
+Visualization: Experiment progress tracked using the RunDetails(hyperdrive_run).show() widget for real-time insights.
+Best Model Identification: Upon completion, the model achieving the highest accuracy is retrieved and saved in the designated outputs folder.
+
+---
 
 # AutoML
 
-AutoML also referred as Automated machine learning or automated ML, is the process of automating the time consuming, iterative tasks of machine learning model development. Automated ML is applied when you want Azure Machine Learning to train and tune a model for you using the target metric you specify.
+Data Acquisition and Preparation:
 
-Initially the dataset(bankmarketing_train.csv) is retrieved from the URL
-(https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv) provided using TabularDatasetFactory Class(Contains methods to create a tabular dataset for Azure Machine Learning). The data is then pre-processed and cleaned with the help of clean_data() function and it is then split as train and test with the ratio of 70:30.
+Retrieved dataset (bankmarketing_train.csv) using TabularDatasetFactory class.
+Preprocessed and cleaned data using clean_data() function.
+Partitioned dataset into 70% training and 30% testing sets.
+AutoML Configuration:
 
-AutoMLConfig is then defined for successfully executing the AutoML run with experiment timeout as ‘30’ minutes as per instructions,task type as ‘Clssification’(Classification is a type of supervised learning in which models learn using training data, and apply those learnings to new data. Classification models is to predict which categories new data will fall into based on learnings from its training data) primary metric as ‘accuracy’, label column as ‘Y’ and n cross validations as ‘5’. The models used here are LightGBM, XGBoostClassifier, RandomForest, VotingEnsemble, StackEnsemble etc as already mentioned and It also uses different pre- processing techniques like Standard Scaling, Min Max Scaling, Sparse Normalizer, MaxAbsScaler.
+Defined AutoMLConfig with crucial parameters:
+Experiment Timeout: 30 minutes
+Task Type: Classification
+Primary Metric: Accuracy
+Label Column: 'Y'
+Cross Validation Folds: 5
+Enabled exploration of diverse model architectures (LightGBM, XGBoostClassifier, RandomForest, VotingEnsemble, StackEnsemble).
+Incorporated various preprocessing techniques (Standard Scaling, Min Max Scaling, Sparse Normalizer, MaxAbsScaler).
+Experiment Execution and Monitoring:
 
+Submitted AutoML experiment for automated model training and evaluation.
+Tracked experiment progress using RunDetails(automl_run).show() widget.
+Best Model Retrieval:
 
-Finally the experiment is being submitted and using the Notebook widget(RunDetails(automl_run).show()), it is visualized. Once the run is successfully completed or executed, the best model is retrieved and  saved in outputs folder in source directory.
+Upon completion, identified and saved the model with the highest accuracy in the outputs folder.
 
-Screenshots of outputs are available in AutoML folder.
+---
 
 ## Pipeline comparison
 
-HyperDrive’s best run accuracy = 91.10%
+Key Observations from Pipeline Comparison:
 
-AutoML’s best run accuracy = 91.74%
+Marginally Superior Performance with AutoML: AutoML achieved a slightly higher best accuracy of 91.74% compared to HyperDrive's 91.10%, suggesting a potential advantage in model selection and optimization.
+Model Exploration and Architecture:
 
-Thus,there is only a very small difference between AutoML’s model and HyperDrive’s model. AutoML’s model is better then HyperDrive’s model.
+Diverse Model Space Exploration with AutoML: AutoML demonstrated flexibility by exploring a broader range of model architectures, including Voting Ensembles, which can often enhance performance by combining multiple predictions.
+Single Algorithm Focus in HyperDrive: HyperDrive concentrated on hyperparameter tuning for a single algorithm (Logistic Regression), limiting its model exploration scope.
+Workflow and Experiment Design:
 
-AutoML run tried creating different models and also used Voting Ensemble which combines the predictions from multiple other models. It is a technique that may be used to improve model performance, ideally achieving better performance than any single model used in the ensemble. But in HyperDrive run,Logistic Regression is used so,multiple models can’t be created  for the pipeline.
+AutoML's Streamlined Workflow: AutoML integrated data retrieval, cleaning, preprocessing, and model training within its automated process, streamlining development.
+HyperDrive's Manual Preprocessing and Configuration: HyperDrive required manual preprocessing and configuration of the training script and HyperDriveConfig, suggesting a more hands-on approach.
+Experiment Flexibility and Potential:
 
-The Architecture of both the models(AutoML and HyperDrive) are different.AutoML model retrieves the training data from the URL,performs cleaning and pre-processing of data then sets AutoMLConfig,finally the AutoML is submitted to get the best model but in HyperDrive,the training script(train.py) is modified,URL and Logistic Regression class is defined then it is passed to HperDriveConfig, before that the HyperParameters are tuned.
+Extended Exploration with Longer Timeouts: AutoML's longer experiment timeout (30 minutes) enabled a wider range of model and preprocessing exploration, potentially leading to better outcomes.
+HyperDrive's Focused Exploration: HyperDrive's experiment design favored focused tuning within a specific algorithm space, potentially missing out on broader model possibilities.
+Conclusion:
 
-AutoML's experiment timeout (set as 30 mintues) is more so, it uses lots of model with different pre-processing techniques to get a best model accuracy but in HyperDrive it needs to create new pipeline for each model.If we increase the experiment timeout, we could possibly get more best model with high accuracy rate.Thus,AutoML has lot of possibilities to use more models and obtain best accuracy rate than HyperDrive.
+AutoML's Advantages for Model Exploration: AutoML demonstrated advantages in terms of model exploration flexibility, ensemble techniques, and overall workflow efficiency.
+HyperDrive's Strengths in Focused Tuning: HyperDrive remains valuable for targeted hyperparameter optimization within specific algorithm spaces.
+Recommendations: Consider prioritizing AutoML for initial model exploration and potential superior performance, while HyperDrive can be valuable for fine-tuning specific algorithms.
 
+---
 
-## Future work
+## Key Areas for Future Research and Optimization:
 
-1. Different algorithms can be used for HyperDrive run and also instead of Random Sampling we can try out Grid and Bayesian Sampling for tuning Hyperparameters,so that we can find out best Hyperparameters in order to get best accuracy for the dataset(bankmarkerting_train.csv)
-2. Increasing the estimate timeout for autoML to find best model.Thus a longer timeout will have greater number of models to run and thus higher the performance rate too.
-3. The dataset has Class Imbalance,which can reflect in model’s accuracy,which can be treated with SMOTE,ADASYN sampling methods and also we can modify the experiments with other hyperparameters and increase the cross validation to enhance models performance, generalization and accuracy rate.
-4. By validating more metrics, we could get better model with best accuracy rate.AUC_weighted which is used to get the arithmetic mean of the score for each class can be weighted and analysed for futher improvements and model training.
+Algorithmic Exploration and Hyperparameter Tuning:
+
+Algorithm Diversification: Extend HyperDrive experiments to encompass a broader range of algorithms, potentially uncovering performance-enhancing alternatives.
+Comprehensive Hyperparameter Search: Investigate Grid and Bayesian sampling strategies to complement Random Sampling, aiming for more thorough hyperparameter space exploration.
+AutoML Exploration Duration:
+
+Timeout Expansion: Increase AutoML's allocated runtime to enable evaluation of a wider spectrum of models, potentially leading to superior performance.
+Class Imbalance Mitigation and Performance Enhancement:
+
+Sampling Techniques: Address dataset class imbalance using SMOTE or ADASYN oversampling methods to improve model robustness and accuracy.
+Hyperparameter and Cross-Validation Tuning: Experiment with alternative hyperparameter configurations and increase cross-validation folds for enhanced model generalization and accuracy.
+Evaluation Metric Expansion:
+
+AUC-Weighted Consideration: Incorporate AUC-weighted metric to complement accuracy, providing a more comprehensive assessment of model performance across classes, particularly in imbalanced scenarios.
