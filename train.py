@@ -11,11 +11,19 @@ from azureml.core.run import Run
 from azureml.data.dataset_factory import TabularDatasetFactory
 
 def clean_data(data):
-    # Dict for cleaning data
+    
+    """Cleans and preprocesses the dataset.
+
+    Args:
+        data: The input dataset.
+
+    Returns:
+        A tuple containing the cleaned features (x_df) and target variable (y_df).
+    """
+    
     months = {"jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12}
     weekdays = {"mon":1, "tue":2, "wed":3, "thu":4, "fri":5, "sat":6, "sun":7}
 
-    # Clean and one hot encode data
     x_df = data.to_pandas_dataframe().dropna()
     jobs = pd.get_dummies(x_df.job, prefix="job")
     x_df.drop("job", inplace=True, axis=1)
@@ -38,6 +46,9 @@ def clean_data(data):
     return x_df, y_df
 
 def main():
+    
+    """Main function for model training and evaluation."""
+
     # Add arguments to script
     parser = argparse.ArgumentParser()
 
