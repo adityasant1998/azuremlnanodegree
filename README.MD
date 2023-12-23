@@ -39,7 +39,7 @@ Data Cleaning and Preprocessing: Employed the clean_data() function to perform e
 One-Hot Encoding: Transformed categorical features into numerical representations for compatibility with machine learning algorithms.
 Train-Test Split: Partitioned the preprocessed dataset into training (70%) and testing (30%) sets for model development and evaluation, respectively.
 
-## Model Selection and Training:
+# Model Selection and Training for Hyperdrive:
 
 Algorithm: Logistic Regression, a widely used statistical classification method for predicting probabilities of binary outcomes.
 Training Script: train.py, containing model training logic and hyperparameter tuning setup.
